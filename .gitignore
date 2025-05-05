@@ -15,3 +15,4 @@ venv/
 # Archivos grandes
 *.log
 *.sqlite3
+backend/.venv/
