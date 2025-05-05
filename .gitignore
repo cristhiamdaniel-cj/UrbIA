@@ -1,0 +1,17 @@
+# Python
+*.pyc
+__pycache__/
+
+# Entornos virtuales
+.venv/
+venv/
+
+# Archivos de sistema
+.DS_Store
+
+# Streamlit
+*.streamlit/
+
+# Archivos grandes
+*.log
+*.sqlite3
