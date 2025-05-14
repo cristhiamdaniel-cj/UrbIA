@@ -1,18 +1,14 @@
-# Python
-*.pyc
+# Ignorar cachés de Python
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
 
-# Entornos virtuales
-.venv/
+# Ignorar bases de datos locales
+*.sqlite3
+
+# Ignorar entornos virtuales
 venv/
 
-# Archivos de sistema
-.DS_Store
-
-# Streamlit
-*.streamlit/
-
-# Archivos grandes
-*.log
-*.sqlite3
-backend/.venv/
+# Ignorar configuraciones locales de IDE
+.idea/
