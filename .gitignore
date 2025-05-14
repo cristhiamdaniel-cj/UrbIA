@@ -12,3 +12,7 @@ venv/
 
 # Ignorar configuraciones locales de IDE
 .idea/
+
+
+# Ignorar archivos de logs
+*.log
