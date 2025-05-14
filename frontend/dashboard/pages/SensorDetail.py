@@ -43,11 +43,9 @@ if not lecturas_sensor:
     st.warning("⚠️ No hay lecturas disponibles para este sensor.")
 else:
     df = pd.DataFrame(lecturas_sensor)
-    df["timestamp"] = pd.to_datetime(df["timestamp"])
-    df = df.rename(columns={"valor": "Valor", "timestamp": "Fecha"})
-
-    # --- Agregar columna de unidad usando la información del sensor
-    unidad = lecturas_sensor[0].get("unidad", "")  # unidad de la primera lectura
+    df["Fecha"] = pd.to_datetime(df["timestamp"])
+    df["Valor"] = pd.to_numeric(df["valor"], errors="coerce")  # 🔥 Conversión segura a número
+    unidad = lecturas_sensor[0].get("unidad", "") or ""  # Capturamos unidad si existe
     df["Unidad"] = unidad
 
     # --- 🔥 Selector de cantidad de lecturas
@@ -58,14 +56,14 @@ else:
     )
 
     df = df.head(cantidad_mostrar)
-    df = df.sort_values("Fecha")  # Ordenarlo cronológicamente
+    df = df.sort_values("Fecha")  # Ordenar cronológicamente
 
     # --- 🔥 Mostrar tarjetas KPI
     kpi1, kpi2, kpi3 = st.columns(3)
 
     total_lecturas = len(df)
-    promedio_valores = round(df["Valor"].mean(), 2)
-    fecha_ultima = df["Fecha"].max().strftime("%Y-%m-%d %H:%M:%S")
+    promedio_valores = round(df["Valor"].mean(), 2) if not df["Valor"].isna().all() else 0
+    fecha_ultima = df["Fecha"].max().strftime("%Y-%m-%d %H:%M:%S") if not df.empty else "N/A"
 
     kpi1.metric(label="📊 Total de Mediciones", value=total_lecturas)
     kpi2.metric(label="📈 Promedio de Valor", value=f"{promedio_valores} {unidad}")

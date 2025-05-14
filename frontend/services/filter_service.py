@@ -6,11 +6,16 @@ class FilterService:
     @staticmethod
     def filtrar_lecturas(lecturas, sensores_filtrados, rango_fechas):
         lecturas_filtradas = []
-        sensor_ids = [s["id"] for s in sensores_filtrados]  # <-- AQUÍ está bien
+        sensor_ids = [s["id"] for s in sensores_filtrados]
+        if rango_fechas:
+            fecha_inicio, fecha_fin = rango_fechas
+        else:
+            return lecturas_filtradas
+
         for lectura in lecturas:
-            if lectura["sensor"] in sensor_ids:  # <-- corregido
+            if lectura["sensor"] in sensor_ids:
                 fecha_lectura = lectura["timestamp"].date()
-                if rango_fechas[0] <= fecha_lectura <= rango_fechas[1]:
+                if fecha_inicio <= fecha_lectura <= fecha_fin:
                     lecturas_filtradas.append(lectura)
         return lecturas_filtradas
 
@@ -24,7 +29,14 @@ class FilterService:
             if sensor_id not in lecturas_por_sensor:
                 lecturas_por_sensor[sensor_id] = []
             if len(lecturas_por_sensor[sensor_id]) < n:
-                lecturas_por_sensor[sensor_id].append(lectura["valor"])
+                valor = lectura["valor"]
+                if isinstance(valor, (int, float)):
+                    lecturas_por_sensor[sensor_id].append(valor)
+                else:
+                    try:
+                        lecturas_por_sensor[sensor_id].append(float(valor))
+                    except Exception:
+                        continue
 
         promedio_por_sensor = {}
         for sensor_id, valores in lecturas_por_sensor.items():
